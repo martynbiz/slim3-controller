@@ -7,16 +7,16 @@ use Slim\Http\Headers;
 use Slim\Http\RequestBody;
 use Slim\Http\Uri;
 
-use SlimMvc\App;
-use SlimMvc\Http\Request;
-use SlimMvc\Http\Response;
+// use MartynBiz\Slim3Controller\App;
+// use MartynBiz\Slim3Controller\Http\Request;
+// use MartynBiz\Slim3Controller\Http\Response;
 
 use Symfony\Component\DomCrawler\Crawler;
 
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var SlimMvc\App
+     * @var MartynBiz\Slim3Controller\App
      */
     protected $app;
 
@@ -92,12 +92,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $serverParams = $env->all();
         $body = new RequestBody();
 
+        $container = $this->app->getContainer();
+
         // create request, and set params
-        $req = new Request($method, $uri, $headers, $cookies, $serverParams, $body);
+        $req = new $container['request']($method, $uri, $headers, $cookies, $serverParams, $body);
         if (!empty($data))
             $req = $req->withParsedBody($data);
 
-        $res = new Response();
+        $res = new $container['response']();
 
         $this->headers = $headers;
         $this->request = $req;
@@ -107,7 +109,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     public function assertController($controllerName)
     {
         if (!method_exists($this->response, 'getControllerName')) {
-            throw new \Exception('getControllerName not found, please use \SlimMvc\Http\Response in your app.');
+            throw new \Exception('getControllerName not found, please use \MartynBiz\Slim3Controller\Http\Response in your app.');
         }
 
         $this->assertEquals($controllerName, $this->response->getControllerName());
@@ -116,7 +118,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     public function assertAction($actionName)
     {
         if (!method_exists($this->response, 'getActionName')) {
-            throw new \Exception('getActionName not found, please use \SlimMvc\Http\Response in your app.');
+            throw new \Exception('getActionName not found, please use \MartynBiz\Slim3Controller\Http\Response in your app.');
         }
 
         $this->assertEquals($actionName, $this->response->getActionName());
