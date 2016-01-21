@@ -1,4 +1,4 @@
 <?php
 
 // require composer autoloader for loading classes
-require '../vendor/autoload.php';
+require realpath(__DIR__ . '/../vendor/autoload.php');
