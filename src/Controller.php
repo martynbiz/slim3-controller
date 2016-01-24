@@ -30,15 +30,14 @@ abstract class Controller
 
             $container = $app->getContainer();
 
-            // Set the app, request and response into the controller if we can
-            if (method_exists($controller, 'setApp')) {
-                $controller->setApp($app);
-            }
             if (method_exists($controller, 'setRequest')) {
                 $controller->setRequest($request);
             }
             if (method_exists($controller, 'setResponse')) {
                 $controller->setResponse($response);
+            }
+            if (method_exists($controller, 'init')) {
+                $controller->init();
             }
 
             // store the name of the controller and action so we can assert during tests
@@ -64,10 +63,11 @@ abstract class Controller
     }
 
     // Optional setters
-    public function setApp($app)
-    {
-        $this->app = $app;
-    }
+
+    // public function setApp($app)
+    // {
+    //     $this->app = $app;
+    // }
 
     public function setRequest($request)
     {
