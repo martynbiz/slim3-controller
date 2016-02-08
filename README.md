@@ -167,7 +167,7 @@ class ExampleControllerTest extends TestCase
 
         // mock dependencies (optional)
         $container = $this->app->getContainer();
-        container->set('model.article', $articleMock);
+        $container->set('model.article', $articleMock);
 
         $this->assertController('articles');
         $this->assertAction('index');
