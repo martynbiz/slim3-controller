@@ -84,6 +84,7 @@ abstract class Controller
      * @param string $file Name of the template/ view to render
      * @param array $args Additional varables to pass to the view
      * @param Response?
+     * TODO should this be here?
      */
     protected function render($file, $args=array())
     {
@@ -141,7 +142,7 @@ abstract class Controller
      * @param  int                 $status The redirect HTTP status code.
      * @return self
      */
-    public function redirect($url, $status = 302)
+    protected function redirect($url, $status = 302)
     {
         return $this->response->withRedirect($url, $status);
     }
