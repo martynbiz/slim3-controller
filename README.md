@@ -158,16 +158,60 @@ use SlimMvc\Test\PHPUnit\TestCase;
 
 class ExampleControllerTest extends TestCase
 {
-    .
-    .
-    .
-    public function testApp()
-    {
-        $this->dispatch('/articles');
+    /**
+     * @var Slim\Container
+     */
+    protected $container;
 
-        // mock dependencies (optional)
+    public function setUp()
+    {
+        // =========================
+        // Instantiate the app and container
+
+        $settings = require APPLICATION_PATH . '/settings.php';
+        $app = new \Slim\App($settings);
+
+
+        // =========================
+        // Set up dependencies
+
+        require APPLICATION_PATH . '/dependencies.php';
+
+
+        // =========================
+        // Create test stubs (optional)
+
+        // In some cases, where services have become "frozen", we need to define
+        // mocks before they are loaded, so immediately after including dependencies.php is best
+
+        //...
+        $this->container['my_dependency'] = ...
+
+
+        // =========================
+        // Register middleware
+
+        require APPLICATION_PATH . '/middleware.php';
+
+
+        // =========================
+        // Register routes
+
+        require APPLICATION_PATH . '/routes.php';
+
+        // store $app for access in test* methods
+        $this->app = $app;
+
+        //... fixtures, etc
+    }
+
+    public function test_example_route()
+    {
+        $this->dispatch('/example');
+
+        // mock methods (optional)
         $container = $this->app->getContainer();
-        container->set('model.article', $articleMock);
+        $container['my_dependency']->expects(...
 
         $this->assertController('articles');
         $this->assertAction('index');
