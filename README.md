@@ -93,7 +93,9 @@ class ExampleController extends Controller
 }
 ```
 
-## Dependencies within controllers ##
+## Get method ##
+
+The get() method within controllers is used to get dependencies defined in $app:
 
 /app/dependencies.php
 
@@ -124,6 +126,15 @@ class ExampleController extends Controller
     .
     .
     .
+```
+
+## Request ##
+
+getCookie
+
+```
+$request->getCookie($name, $defaultValue);
+```est->getCookie($name, $defaultValue);
 ```
 
 
@@ -223,3 +234,6 @@ class ExampleControllerTest extends TestCase
     }
 }
 ```
+
+TODO
+doc - getCookie

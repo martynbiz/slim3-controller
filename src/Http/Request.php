@@ -16,5 +16,16 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class Request extends \Slim\Http\Request implements ServerRequestInterface
 {
+    /**
+     * Get a cookie, or a default value if not set
+     * @param string $name Name of the cookie
+     * @param string $defaultValue If none exist, use this value
+     * @return string
+     */
+    public function getCookie($name, $defaultValue)
+    {
+        $cookies = $this->getCookieParams();
 
+        return array_key_exists($name, $cookies) ? $cookies[$name] : $defaultValue;
+    }
 }
