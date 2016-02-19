@@ -237,4 +237,5 @@ class ExampleControllerTest extends TestCase
 
 TODO
 doc - getCookie
-tests - cookies not available, get params not available - why?
+tests - cookies not available, why?
+body missing in tests - why??
