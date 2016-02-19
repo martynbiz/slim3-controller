@@ -237,3 +237,4 @@ class ExampleControllerTest extends TestCase
 
 TODO
 doc - getCookie
+tests - cookies not available, get params not available - why?

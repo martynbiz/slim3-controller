@@ -7,10 +7,6 @@ use Slim\Http\Headers;
 use Slim\Http\RequestBody;
 use Slim\Http\Uri;
 
-// use MartynBiz\Slim3Controller\App;
-// use MartynBiz\Slim3Controller\Http\Request;
-// use MartynBiz\Slim3Controller\Http\Response;
-
 use Symfony\Component\DomCrawler\Crawler;
 
 abstract class TestCase extends \PHPUnit_Framework_TestCase
@@ -38,57 +34,61 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Perform get dispatch
      */
-    public function get($path)
+    public function get($path, $cookies=array())
     {
-        return $this->dispatch($path, 'GET');
+        return $this->dispatch($path, 'GET', null, $cookies);
     }
 
     /**
      * Perform post dispatch
      */
-    public function post($path, $data=array())
+    public function post($path, $data=array(), $cookies=array())
     {
-        return $this->dispatch($path, 'POST', $data);
+        return $this->dispatch($path, 'POST', $data, $cookies);
     }
 
     /**
      * Perform put dispatch
      */
-    public function put($path, $data=array())
+    public function put($path, $data=array(), $cookies=array())
     {
         // simulate a PUT by using POST with _METHOD=PUT
         $data = array_merge($data, array(
             '_METHOD' => 'PUT',
         ));
 
-        return $this->post($path, $data);
+        return $this->post($path, $data, $cookies);
     }
 
     /**
      * Perform delete dispatch
      */
-    public function delete($path, $data=array())
+    public function delete($path, $data=array(), $cookies=array())
     {
         // simulate a PUT by using POST with _METHOD=PUT
         $data = array_merge($data, array(
             '_METHOD' => 'DELETE',
         ));
 
-        return $this->post($path, $data);
+        return $this->post($path, $data, $cookies);
     }
 
-    protected function dispatch($path, $method='GET', $data=array())
+    protected function dispatch($path, $method='GET', $data=array(), $cookies=array())
     {
+        // seperate the path from the query string so we can set in the environment
+        @list($path, $queryString) = explode('?', $path);
+
         // Prepare a mock environment
         $env = Environment::mock(array(
             'REQUEST_URI' => $path,
             'REQUEST_METHOD' => $method,
+            'QUERY_STRING' => is_null($queryString) ? '' : $queryString,
         ));
 
         // Prepare request and response objects
         $uri = Uri::createFromEnvironment($env);
         $headers = Headers::createFromEnvironment($env);
-        $cookies = [];
+        $cookies = $cookies;
         $serverParams = $env->all();
         $body = new RequestBody();
 
