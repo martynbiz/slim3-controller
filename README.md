@@ -137,6 +137,19 @@ $request->getCookie($name, $defaultValue);
 ```est->getCookie($name, $defaultValue);
 ```
 
+## Response ##
+
+### HTTP response codes ###
+
+There is a full list of HTTP response code enums which can be used in controllers
+when returning a response:
+
+```
+return $this->response->withStatus(Response::HTTP_BAD_REQUEST);
+```
+
+See full list here - https://github.com/martynbiz/slim3-controller/blob/master/src/Http/Response.php
+
 
 ## Testing controllers ##
 
