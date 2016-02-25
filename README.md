@@ -41,7 +41,7 @@ $app->group('/articles', function () use ($app) {
     $app->get('/{id:[0-9]+}', $controller('show'));
     $app->get('/{id:[0-9]+}/edit', $controller('edit'));
     $app->put('/{id:[0-9]+}', $controller('put'));
-    $app->put('/{id:[0-9]+}', $controller('delete'));
+    $app->delete('/{id:[0-9]+}', $controller('delete'));
 });
 ```
 
