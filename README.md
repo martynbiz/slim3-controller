@@ -35,8 +35,13 @@ $app->group('/articles', function () use ($app) {
 
     $controller = new App\Controller\ExampleController($app);
 
+    $app->get('', $controller('index'));
+    $app->get('/create', $controller('index'));
+    $app->post('', $controller('post'));
     $app->get('/{id:[0-9]+}', $controller('show'));
-    $app->get('/{id:[0-9]+}/{slug}', $controller('show'));
+    $app->get('/{id:[0-9]+}/edit', $controller('edit'));
+    $app->put('/{id:[0-9]+}', $controller('put'));
+    $app->put('/{id:[0-9]+}', $controller('delete'));
 });
 ```
 
