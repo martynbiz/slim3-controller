@@ -75,7 +75,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
 
     protected function dispatch($path, $method='GET', $data=array(), $cookies=array())
     {
-        // seperate the path from the query string so we can set in the environment
+        $container = $this->app->getContainer();
+	
+	// seperate the path from the query string so we can set in the environment
         @list($path, $queryString) = explode('?', $path);
 
         // Prepare a mock environment
@@ -90,15 +92,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $headers = Headers::createFromEnvironment($env);
         $cookies = $cookies;
         $serverParams = $env->all();
-        $body = new RequestBody();
-
-        $container = $this->app->getContainer();
-
-        // create request, and set params
+	$body = new RequestBody();
+        if (!empty($data)) {
+	    $body->write(json_encode($data));
+			        }
+	// create request, and set params
         $req = new $container['request']($method, $uri, $headers, $cookies, $serverParams, $body);
-        if (!empty($data))
-            $req = $req->withParsedBody($data);
-
         $res = new $container['response']();
 
         $this->headers = $headers;
