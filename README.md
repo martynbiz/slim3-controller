@@ -35,8 +35,13 @@ $app->group('/articles', function () use ($app) {
 
     $controller = new App\Controller\ExampleController($app);
 
+    $app->get('', $controller('index'));
+    $app->get('/create', $controller('index'));
+    $app->post('', $controller('post'));
     $app->get('/{id:[0-9]+}', $controller('show'));
-    $app->get('/{id:[0-9]+}/{slug}', $controller('show'));
+    $app->get('/{id:[0-9]+}/edit', $controller('edit'));
+    $app->put('/{id:[0-9]+}', $controller('put'));
+    $app->delete('/{id:[0-9]+}', $controller('delete'));
 });
 ```
 
@@ -136,6 +141,19 @@ getCookie
 $request->getCookie($name, $defaultValue);
 ```est->getCookie($name, $defaultValue);
 ```
+
+## Response ##
+
+### HTTP response codes ###
+
+There is a full list of HTTP response code enums which can be used in controllers
+when returning a response:
+
+```
+return $this->response->withStatus(Response::HTTP_BAD_REQUEST);
+```
+
+See full list here - https://github.com/martynbiz/slim3-controller/blob/master/src/Http/Response.php
 
 
 ## Testing controllers ##
