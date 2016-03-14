@@ -1,6 +1,8 @@
 <?php
 namespace MartynBiz\Slim3Controller;
 
+use Psr\Http\Message\UriInterface;
+
 abstract class Controller
 {
     // Optional properties
@@ -19,7 +21,9 @@ abstract class Controller
     /**
      * This method allows use to return a callable that calls the action for
      * the route.
-     * @param string $action Name of the action method to call
+     * @param $actionName
+     * @return \Closure
+     * @internal param string $actionName Name of the action method to call
      */
     public function __invoke($actionName)
     {
@@ -43,7 +47,8 @@ abstract class Controller
             // store the name of the controller and action so we can assert during tests
             $controllerName = get_class($controller); // eg. CrSrc\Controller\Admin\ArticlesController
             $controllerName = strtolower($controllerName); // eg. crsrc\controller\admin\articlescontroller
-            $controllerName = array_pop(explode('\\', $controllerName)); // eg. articlescontroller
+            $controllerNameParts = explode('\\', $controllerName);
+            $controllerName = array_pop($controllerNameParts); // eg. articlescontroller
             preg_match('/(.*)controller$/', $controllerName, $result); // eg. articles?
             $controllerName = $result[1];
 
@@ -82,7 +87,7 @@ abstract class Controller
     /**
      * Render the view from within the controller
      * @param string $file Name of the template/ view to render
-     * @param array $args Additional varables to pass to the view
+     * @param array $args Additional variables to pass to the view
      * @param Response?
      * TODO should this be here?
      */
@@ -124,6 +129,8 @@ abstract class Controller
 
     /**
      * Shorthand method to get dependency from container
+     * @param $name
+     * @return mixed
      */
     protected function get($name)
     {
@@ -150,9 +157,10 @@ abstract class Controller
     /**
      * Pass on the control to another action. Of the same class (for now)
      *
-     * @param  string $actionName    The redirect destination.
-     * @param  string                 $status The redirect HTTP status code.
-     * @return self
+     * @param  string $actionName The redirect destination.
+     * @param array $data
+     * @return Controller
+     * @internal param string $status The redirect HTTP status code.
      */
     public function forward($actionName, $data=array())
     {

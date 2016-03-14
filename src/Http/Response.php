@@ -99,6 +99,7 @@ class Response extends \Slim\Http\Response implements ResponseInterface
 
     /**
      * Set the last controller called
+     * @param $controllerName
      */
     public function setControllerName($controllerName)
     {
@@ -115,6 +116,7 @@ class Response extends \Slim\Http\Response implements ResponseInterface
 
     /**
      * Set the last controller called
+     * @param $actionName
      */
     public function setActionName($actionName)
     {
