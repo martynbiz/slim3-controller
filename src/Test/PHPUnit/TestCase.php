@@ -76,7 +76,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     protected function dispatch($path, $method='GET', $data=array(), $cookies=array())
     {
         $container = $this->app->getContainer();
-	
+
 	// seperate the path from the query string so we can set in the environment
         @list($path, $queryString) = explode('?', $path);
 
@@ -92,13 +92,27 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $headers = Headers::createFromEnvironment($env);
         $cookies = $cookies;
         $serverParams = $env->all();
-	$body = new RequestBody();
-        if (!empty($data)) {
-	    $body->write(json_encode($data));
-			        }
-	// create request, and set params
+
+
+        $body = new RequestBody();
+
+        // create request, and set params
         $req = new $container['request']($method, $uri, $headers, $cookies, $serverParams, $body);
+        if (!empty($data))
+            $req = $req->withParsedBody($data);
+
         $res = new $container['response']();
+
+
+        // // Fix for body, but breaks POST params in tests - http://stackoverflow.com/questions/34823328/response-getbody-is-empty-when-testing-slim-3-routes-with-phpunit
+        // $body = new RequestBody();
+        // if (!empty($data))
+	    //    $body->write(json_encode($data));
+        //
+	    // // create request, and set params
+        // $req = new $container['request']($method, $uri, $headers, $cookies, $serverParams, $body);
+        // $res = new $container['response']();
+
 
         $this->headers = $headers;
         $this->request = $req;
