@@ -9,9 +9,7 @@ Provides controller functionality to Slim Framework v3. Also includes PHPUnit Te
 Composer
 
 ```php
-"require-dev": {
-    "martynbiz/slim3-controller": "dev-master"
-}
+composer require martynbiz/slim3-controller
 ```
 
 ## Usage ##
