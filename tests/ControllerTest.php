@@ -1,5 +1,7 @@
 <?php
 
+// TODO test getController, action, module etc
+
 use MartynBiz\Slim3Controller\Controller;
 
 /**

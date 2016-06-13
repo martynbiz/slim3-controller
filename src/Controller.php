@@ -54,6 +54,9 @@ abstract class Controller
 
             // these values will be useful when testing, but not included with the
             // Slim\Http\Response. Instead use SlimMvc\Http\Response
+            if (method_exists($response, 'setControllerClass')) {
+                $response->setControllerClass( get_class($controller) );
+            }
             if (method_exists($response, 'setControllerName')) {
                 $response->setControllerName($controllerName);
             }
@@ -125,6 +128,16 @@ abstract class Controller
     protected function getQueryParams()
     {
         return $this->request->getQueryParams();
+    }
+
+    /**
+     * Get a single param
+     */
+    protected function getQueryParam($name, $default=null)
+    {
+        $params = $this->request->getQueryParam();
+
+        return (isset($params[$name])) ? $params[$name] : $default;
     }
 
     /**
