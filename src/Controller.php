@@ -135,9 +135,7 @@ abstract class Controller
      */
     protected function getQueryParam($name, $default=null)
     {
-        $params = $this->request->getQueryParams();
-
-        return (isset($params[$name])) ? $params[$name] : $default;
+        return $this->request->getQueryParams($name, $default);
     }
 
     /**
