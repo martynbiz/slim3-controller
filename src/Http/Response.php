@@ -73,11 +73,16 @@ class Response extends \Slim\Http\Response implements ResponseInterface
     const HTTP_LOOP_DETECTED = 508;                                               // RFC5842
     const HTTP_NOT_EXTENDED = 510;                                                // RFC2774
     const HTTP_NETWORK_AUTHENTICATION_REQUIRED = 511;                             // RFC6585
-    
+
     /**
      * @var string Name of last controller called
      */
     protected $controllerName;
+
+    /**
+     * @var string Name of last controller called
+     */
+    protected $controllerClass;
 
     /**
      * @var string Name of last action called
@@ -104,6 +109,23 @@ class Response extends \Slim\Http\Response implements ResponseInterface
     public function setControllerName($controllerName)
     {
         return $this->controllerName = $controllerName;
+    }
+
+    /**
+     * Get the last controller called
+     */
+    public function getControllerClass()
+    {
+        return $this->controllerClass;
+    }
+
+    /**
+     * Set the last controller called
+     * @param $controllerClass
+     */
+    public function setControllerClass($controllerClass)
+    {
+        return $this->controllerClass = $controllerClass;
     }
 
     /**

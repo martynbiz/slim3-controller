@@ -57,6 +57,9 @@ abstract class Controller
             if (method_exists($response, 'setControllerName')) {
                 $response->setControllerName($controllerName);
             }
+            if (method_exists($response, 'setControllerClass')) {
+                $response->setControllerClass(get_class($controller));
+            }
             if (method_exists($response, 'setActionName')) {
                 $response->setActionName($actionName);
             }
@@ -117,6 +120,15 @@ abstract class Controller
         )));
 
         return $post;
+    }
+
+    /**
+     * Get the POST params
+     * @param string $name 
+     */
+    protected function getQueryParam($name)
+    {
+        return $this->request->getQueryParam($name);
     }
 
     /**

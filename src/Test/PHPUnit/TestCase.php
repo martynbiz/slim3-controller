@@ -128,6 +128,15 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $this->assertEquals($controllerName, $this->response->getControllerName());
     }
 
+    public function assertControllerClass($controllerClass)
+    {
+        if (!method_exists($this->response, 'getControllerClass')) {
+            throw new \Exception('getControllerClass not found, please use \MartynBiz\Slim3Controller\Http\Response in your app.');
+        }
+
+        $this->assertEquals($controllerClass, $this->response->getControllerClass());
+    }
+
     public function assertAction($actionName)
     {
         if (!method_exists($this->response, 'getActionName')) {
