@@ -124,11 +124,11 @@ abstract class Controller
 
     /**
      * Get the POST params
-     * @param string $name 
+     * @param string $name
      */
-    protected function getQueryParam($name)
+    protected function getQueryParam($name, $default=null)
     {
-        return $this->request->getQueryParam($name);
+        return $this->request->getQueryParam($name, $default);
     }
 
     /**
