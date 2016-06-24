@@ -1,21 +1,22 @@
 <?php
 namespace MartynBiz\Slim3Controller;
 
-use Psr\Http\Message\UriInterface;
+// use Psr\Http\Message\UriInterface;
+use Slim\Container;
 
 abstract class Controller
 {
-    // Optional properties
-    protected $app;
-    protected $request;
-    protected $response;
+    /**
+     * @var Slim\Container
+     */
+    protected $container;
 
     /**
-     * @param \Slim\App $app
+     * @param Slim\Container $container
      */
-    public function __construct(\Slim\App $app)
+    public function __construct(Container $container)
     {
-        $this->app = $app;
+        $this->container = $container;
     }
 
     /**
@@ -27,22 +28,20 @@ abstract class Controller
      */
     public function __invoke($actionName)
     {
-        $app = $this->app;
+        $container = $this->container;
         $controller = $this;
 
-        $callable = function ($request, $response, $args) use ($app, $controller, $actionName) {
+        $callable = function ($request, $response, $args) use ($container, $controller, $actionName) {
 
-            $container = $app->getContainer();
-
-            if (method_exists($controller, 'setRequest')) {
-                $controller->setRequest($request);
-            }
-            if (method_exists($controller, 'setResponse')) {
-                $controller->setResponse($response);
-            }
-            if (method_exists($controller, 'init')) {
-                $controller->init();
-            }
+            // if (method_exists($controller, 'setRequest')) {
+            //     $controller->setRequest($request);
+            // }
+            // if (method_exists($controller, 'setResponse')) {
+            //     $controller->setResponse($response);
+            // }
+            // if (method_exists($controller, 'init')) {
+            //     $controller->init();
+            // }
 
             // store the name of the controller and action so we can assert during tests
             $controllerName = get_class($controller); // eg. CrSrc\Controller\Admin\ArticlesController
@@ -53,7 +52,7 @@ abstract class Controller
             $controllerName = $result[1];
 
             // these values will be useful when testing, but not included with the
-            // Slim\Http\Response. Instead use SlimMvc\Http\Response
+            // Slim\Http\Response. Instead use Slim3Controller\Http\Response
             if (method_exists($response, 'setControllerClass')) {
                 $response->setControllerClass( get_class($controller) );
             }
@@ -70,52 +69,46 @@ abstract class Controller
         return $callable;
     }
 
-    // Optional setters
-
-    // public function setApp($app)
+    // public function setRequest($request)
     // {
-    //     $this->app = $app;
+    //     $this->get('request') = $request;
+    // }
+    //
+    // public function setResponse($response)
+    // {
+    //     $this->response = $response;
     // }
 
-    public function setRequest($request)
-    {
-        $this->request = $request;
-    }
+    // /**
+    //  * Render the view from within the controller
+    //  * @param string $file Name of the template/ view to render
+    //  * @param array $args Additional variables to pass to the view
+    //  * @param Response?
+    //  * TODO should this be here?
+    //  */
+    // protected function render($file, $args=array())
+    // {
+    //     // $container = $this->app->getContainer();
+    //
+    //     // return $container->renderer->render($this->response, $file, $args);
+    //     return $this->container->view->render($this->response, $file, $args);
+    // }
 
-    public function setResponse($response)
-    {
-        $this->response = $response;
-    }
-
-    /**
-     * Render the view from within the controller
-     * @param string $file Name of the template/ view to render
-     * @param array $args Additional variables to pass to the view
-     * @param Response?
-     * TODO should this be here?
-     */
-    protected function render($file, $args=array())
-    {
-        $container = $this->app->getContainer();
-
-        // return $container->renderer->render($this->response, $file, $args);
-        return $container->view->render($this->response, $file, $args);
-    }
-
-    /**
-     * Return true if XHR request
-     */
-    protected function isXhr()
-    {
-        return $this->request->isXhr();
-    }
+    // /**
+    //  * Return true if XHR request
+    //  */
+    // protected function isXhr()
+    // {
+    //     return $this->get('request')->isXhr();
+    // }
 
     /**
      * Get the POST params
      */
     protected function getPost()
     {
-        $post = array_diff_key($this->request->getParams(), array_flip(array(
+        // we don't require _METHOD
+        $post = array_diff_key($this->get('request')->getParams(), array_flip(array(
             '_METHOD',
         )));
 
@@ -127,7 +120,7 @@ abstract class Controller
      */
     protected function getQueryParams()
     {
-        return $this->request->getQueryParams();
+        return $this->get('request')->getQueryParams();
     }
 
     /**
@@ -135,7 +128,9 @@ abstract class Controller
      */
     protected function getQueryParam($name, $default=null)
     {
-        return $this->request->getQueryParams($name, $default);
+        $params = $this->get('request')->getQueryParams();
+
+        return (isset($params[$name])) ? $params[$name] : $default;
     }
 
     /**
@@ -145,7 +140,7 @@ abstract class Controller
      */
     protected function get($name)
     {
-        return $this->app->getContainer()->get($name);
+        return $this->container->get($name);
     }
 
     /**
@@ -158,11 +153,11 @@ abstract class Controller
      *
      * @param  string|UriInterface $url    The redirect destination.
      * @param  int                 $status The redirect HTTP status code.
-     * @return self
+     * @return Response
      */
     protected function redirect($url, $status = 302)
     {
-        return $this->response->withRedirect($url, $status);
+        return $this->get('response')->withRedirect($url, $status);
     }
 
     /**
@@ -170,14 +165,14 @@ abstract class Controller
      *
      * @param  string $actionName The redirect destination.
      * @param array $data
-     * @return Controller
+     * @return Response
      * @internal param string $status The redirect HTTP status code.
      */
     public function forward($actionName, $data=array())
     {
         // update the action name that was last used
-        if (method_exists($this->response, 'setActionName')) {
-            $this->response->setActionName($actionName);
+        if (method_exists($this->get('response'), 'setActionName')) {
+            $this->get('response')->setActionName($actionName);
         }
 
         return call_user_func_array(array($this, $actionName), $data);
