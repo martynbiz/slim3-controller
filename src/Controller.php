@@ -1,6 +1,61 @@
 <?php
 namespace MartynBiz\Slim3Controller;
 
+abstract class Controller {
+    protected $ci;
+
+    //Constructor
+    public function __construct(ContainerInterface $ci) {
+       $this->ci = $ci;
+    }
+
+    public function __call($name, $arguments) { // $arguments = [$req, $res, $args]
+        call_user_func_array ([$this, $name], $arguments[2]);
+    }
+
+    /**
+     * Shorthand method to get dependency from container
+     * @param $name
+     * @return mixed
+     */
+    protected function getContainer()
+    {
+        return $this->ci;
+    }
+
+    /**
+     * Pass on the control to another action. Of the same class (for now)
+     *
+     * @param  string $actionName The redirect destination.
+     * @param array $data
+     * @return Controller
+     * @internal param string $status The redirect HTTP status code.
+     */
+    public function forward($actionName, $data=array())
+    {
+        // update the action name that was last used
+        if (method_exists($this->response, 'setActionName')) {
+            $this->response->setActionName($actionName);
+        }
+
+        return call_user_func_array(array($this, $actionName), $data);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+namespace MartynBiz\Slim3Controller;
+
 use Psr\Http\Message\UriInterface;
 
 abstract class Controller

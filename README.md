@@ -10,7 +10,7 @@ Composer
 
 ```php
 "require-dev": {
-    "martynbiz/slim3-controller": "dev-master"
+    "martynbiz/slim3-controller": "1.0^"
 }
 ```
 
@@ -22,26 +22,20 @@ Composer
 <?php
 
 // index routes (homepage, about, etc)
-$app->group('', function () use ($app) {
-
-    $controller = new App\Controller\IndexController($app);
-
-    $app->get('/', $controller('index'));
-    $app->get('/contact', $controller('contact'));
+$app->group('', function () {
+    $app->get('/', '\App\Controller\IndexController:index');
+    $app->get('/contact', '\App\Controller\IndexController:contact');
 });
 
 // create resource method for Slim::resource($route, $name)
 $app->group('/articles', function () use ($app) {
-
-    $controller = new App\Controller\ExampleController($app);
-
-    $app->get('', $controller('index'));
-    $app->get('/create', $controller('index'));
-    $app->post('', $controller('post'));
-    $app->get('/{id:[0-9]+}', $controller('show'));
-    $app->get('/{id:[0-9]+}/edit', $controller('edit'));
-    $app->put('/{id:[0-9]+}', $controller('put'));
-    $app->delete('/{id:[0-9]+}', $controller('delete'));
+    $app->get('', '\App\Controller\ArticlesController:index');
+    $app->get('/create', '\App\Controller\ArticlesController:create');
+    $app->post('', '\App\Controller\ArticlesController:post');
+    $app->get('/{id:[0-9]+}', '\App\Controller\ArticlesController:show');
+    $app->get('/{id:[0-9]+}/edit', '\App\Controller\ArticlesController:edit');
+    $app->put('/{id:[0-9]+}', '\App\Controller\ArticlesController:update');
+    $app->delete('/{id:[0-9]+}', '\App\Controller\ArticlesController:delete');
 });
 ```
 
@@ -120,11 +114,13 @@ class ExampleController extends Controller
 {
     public function index()
     {
+        $container = $this->getContainer();
+
         // the "get" method is used to retrieve items stored in the Slim container
-        $examples = $this->get('model.example')->find();
+        $examples = $container->get('model.example')->find();
 
         // the "render" provides a neat means to pass template and data to $container['view']
-        return $this->render('admin/example/index.html', array(
+        return $container->get('renderer')->render('admin/example/index.html', array(
             'examples' => $examples,
         ));
     }
@@ -139,7 +135,6 @@ getCookie
 
 ```
 $request->getCookie($name, $defaultValue);
-```est->getCookie($name, $defaultValue);
 ```
 
 ## Response ##
