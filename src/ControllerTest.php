@@ -1,6 +1,6 @@
 <?php
 
-namespace MartynBiz\Slim3Controller\Test\PHPUnit;
+namespace MartynBiz\Slim3Controller;
 
 use Slim\Http\Environment;
 use Slim\Http\Headers;
@@ -9,7 +9,7 @@ use Slim\Http\Uri;
 
 use Symfony\Component\DomCrawler\Crawler;
 
-abstract class TestCase extends \PHPUnit_Framework_TestCase
+abstract class ControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var MartynBiz\Slim3Controller\App
@@ -119,23 +119,23 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         $this->response = call_user_func_array($this->app, array($req, $res));
     }
 
-    public function assertController($controllerName)
-    {
-        if (!method_exists($this->response, 'getControllerName')) {
-            throw new \Exception('getControllerName not found, please use \MartynBiz\Slim3Controller\Http\Response in your app.');
-        }
-
-        $this->assertEquals($controllerName, $this->response->getControllerName());
-    }
-
-    public function assertAction($actionName)
-    {
-        if (!method_exists($this->response, 'getActionName')) {
-            throw new \Exception('getActionName not found, please use \MartynBiz\Slim3Controller\Http\Response in your app.');
-        }
-
-        $this->assertEquals($actionName, $this->response->getActionName());
-    }
+    // public function assertController($controllerName)
+    // {
+    //     if (!method_exists($this->response, 'getControllerName')) {
+    //         throw new \Exception('getControllerName not found, please use \MartynBiz\Slim3Controller\Http\Response in your app.');
+    //     }
+    //
+    //     $this->assertEquals($controllerName, $this->response->getControllerName());
+    // }
+    //
+    // public function assertAction($actionName)
+    // {
+    //     if (!method_exists($this->response, 'getActionName')) {
+    //         throw new \Exception('getActionName not found, please use \MartynBiz\Slim3Controller\Http\Response in your app.');
+    //     }
+    //
+    //     $this->assertEquals($actionName, $this->response->getActionName());
+    // }
 
     public function assertStatusCode($statusCode)
     {

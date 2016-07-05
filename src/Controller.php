@@ -43,13 +43,21 @@ abstract class Controller {
      * @param array $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function forward($actionName, $data=array())
+    public function forward($actionName, $args=array())
     {
-        // update the action name that was last used
-        if (method_exists($this->response, 'setActionName')) {
-            $this->response->setActionName($actionName);
-        }
+        $container = $this->getContainer();
+        $request = $container->request;
+        $response = $container->response;
 
-        return call_user_func_array(array($this, $actionName), $data);
+        // // update the action name that was last used
+        // if (method_exists($response, 'setActionName')) {
+        //     $response->setActionName($actionName);
+        // }
+
+        return call_user_func_array(array($this, $actionName), [
+            $request,
+            $response,
+            $args,
+        ]);
     }
 }
