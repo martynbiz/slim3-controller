@@ -4,15 +4,14 @@ namespace MartynBiz\Slim3Controller;
 use Interop\Container\ContainerInterface;
 
 abstract class Controller {
-    protected $ci;
 
-    //Constructor
-    public function __construct(ContainerInterface $ci) {
-       $this->ci = $ci;
-    }
+    /**
+     * @var Interop\Container\ContainerInterface
+     */
+    protected $container;
 
-    public function __call($name, $arguments) { // $arguments = [$req, $res, $args]
-        call_user_func_array ([$this, $name], $arguments[2]);
+    public function __construct(ContainerInterface $container) {
+       $this->container = $container;
     }
 
     /**
@@ -22,7 +21,7 @@ abstract class Controller {
      */
     protected function getContainer()
     {
-        return $this->ci;
+        return $this->container;
     }
 
     /**
@@ -34,12 +33,13 @@ abstract class Controller {
      */
     protected function redirect($url, $status = 302)
     {
-        return $this->response->withRedirect($url, $status);
+        $container = $this->getContainer();
+        return $container->response->withRedirect($url, $status);
     }
 
     /**
      * Pass on the control to another action. Of the same class (for now)
-     * @param  string $actionName The redirect destination.
+     * @param  string $actionName The forward destination.
      * @param array $data
      * @return Psr\Http\Message\ResponseInterface
      */

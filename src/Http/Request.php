@@ -22,7 +22,7 @@ class Request extends \Slim\Http\Request implements ServerRequestInterface
      * @param string $defaultValue If none exist, use this value
      * @return string
      */
-    public function getCookie($name, $defaultValue=null)
+    public function getCookieParam($name, $defaultValue=null)
     {
         $cookies = $this->getCookieParams();
 
