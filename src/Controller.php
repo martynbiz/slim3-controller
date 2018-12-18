@@ -50,7 +50,11 @@ abstract class Controller
             $controllerNameParts = explode('\\', $controllerName);
             $controllerName = array_pop($controllerNameParts); // eg. articlescontroller
             preg_match('/(.*)controller$/', $controllerName, $result); // eg. articles?
-            $controllerName = $result[1];
+            
+            if( !empty($result) && isset($result[1]) )
+            {
+                $controllerName = $result[1];
+            }
 
             // these values will be useful when testing, but not included with the
             // Slim\Http\Response. Instead use SlimMvc\Http\Response
