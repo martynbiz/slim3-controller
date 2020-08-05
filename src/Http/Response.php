@@ -1,4 +1,5 @@
 <?php
+
 namespace MartynBiz\Slim3Controller\Http;
 
 use Psr\Http\Message\ResponseInterface;
@@ -96,6 +97,8 @@ class Response extends \Slim\Http\Response implements ResponseInterface
 
     /**
      * Get the last controller called
+     *
+     * @return string
      */
     public function getControllerName()
     {
@@ -104,7 +107,9 @@ class Response extends \Slim\Http\Response implements ResponseInterface
 
     /**
      * Set the last controller called
-     * @param $controllerName
+     *
+     * @param string $controllerName
+     * @return string
      */
     public function setControllerName($controllerName)
     {
@@ -113,6 +118,8 @@ class Response extends \Slim\Http\Response implements ResponseInterface
 
     /**
      * Get the last controller called
+     *
+     * @return string
      */
     public function getControllerClass()
     {
@@ -121,7 +128,9 @@ class Response extends \Slim\Http\Response implements ResponseInterface
 
     /**
      * Set the last controller called
-     * @param $controllerClass
+     *
+     * @param string $controllerClass
+     * @return string
      */
     public function setControllerClass($controllerClass)
     {
@@ -130,6 +139,8 @@ class Response extends \Slim\Http\Response implements ResponseInterface
 
     /**
      * Get the last controller called
+     *
+     * @return string
      */
     public function getActionName()
     {
@@ -138,7 +149,8 @@ class Response extends \Slim\Http\Response implements ResponseInterface
 
     /**
      * Set the last controller called
-     * @param $actionName
+     *
+     * @param string $actionName
      */
     public function setActionName($actionName)
     {
